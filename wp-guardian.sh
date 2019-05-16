@@ -57,11 +57,9 @@ function check_plugin_update()
         if [ $? -ne 0 ]
         then
             # pliki sie roznia - byla zmiana !!!
-            echo -e "\n--- WTYCZKI ---"                      >> "$ALERT_FILE"
-            echo "Poprzednio:"                               >> "$ALERT_FILE"
-            cat "${DATA_DIR}/${file}" | column -t -s','      >> "$ALERT_FILE"
-            echo "Aktualnie: "                               >> "$ALERT_FILE"
-            cat "${DATA_DIR}/${tmp_file}" | column -t -s','  >> "$ALERT_FILE"
+            echo -e "\n--- WTYCZKI ---"                                 >> "$ALERT_FILE"
+            echo "Zmiana:"                                              >> "$ALERT_FILE"
+            grep -vf "${DATA_DIR}/${file}" "${DATA_DIR}/${tmp_file}" | column -t -s','  >> "$ALERT_FILE"
         fi
     fi
     # aktualizacja
@@ -145,17 +143,17 @@ function check_core_verify_checksums()
     then
         # pierwsze uruchomienie lub plik zostal usuniety
         echo -e "\n--- Kontrola spojnosci plikow WordPressa --- pierwszy raport" >> "$ALERT_FILE"
-        cat "${DATA_DIR}/${tmp_file}"                                       	 >> "$ALERT_FILE"
+        cat "${DATA_DIR}/${tmp_file}"                                            >> "$ALERT_FILE"
     else
         cmp -s "${DATA_DIR}/${tmp_file}" "${DATA_DIR}/${file}"
         if [ $? -ne 0 ]
         then
             # pliki sie roznia - byla zmiana !!!
             echo -e "\n--- Kontrola spojnosci plikow WordPressa ---" >> "$ALERT_FILE"
-            echo "Poprzednio:"                                  	 >> "$ALERT_FILE"
-            cat "${DATA_DIR}/${file}"                           	 >> "$ALERT_FILE"
-            echo "Aktualnie: "                                  	 >> "$ALERT_FILE"
-            cat "${DATA_DIR}/${tmp_file}"                       	 >> "$ALERT_FILE"
+            echo "Poprzednio:"                                       >> "$ALERT_FILE"
+            cat "${DATA_DIR}/${file}"                                >> "$ALERT_FILE"
+            echo "Aktualnie: "                                       >> "$ALERT_FILE"
+            cat "${DATA_DIR}/${tmp_file}"                            >> "$ALERT_FILE"
         fi
     fi
     # aktualizacja
@@ -318,7 +316,7 @@ function check_all_files()
         local num_lines=`cat "${DATA_DIR}/${checksum_changes}" | wc -l`
         if [ "$num_lines" -gt 0 ] && [ "$num_lines" -lt 10 ]
         then
-        	echo -e "\n--- Zmienione pliki ---- $num_lines" >> "$ALERT_FILE"
+            echo -e "\n--- Zmienione pliki ---- $num_lines" >> "$ALERT_FILE"
             cat "${DATA_DIR}/${checksum_changes}" | "$AWK_BIN" '{print $2}' >> "$ALERT_FILE"
         fi
     fi
@@ -346,7 +344,7 @@ function basic_information()
 
     if [ -f "${ALERT_FILE}" ]
     then
-    	echo >> "$ALERT_FILE"
+        echo >> "$ALERT_FILE"
         echo "Wersja WordPressa: $wp_version" >> "${ALERT_FILE}"
         echo "URL strony: $wp_siteurl" >> "${ALERT_FILE}"
     fi
