@@ -52,7 +52,7 @@ function check_plugin_update()
 
         echo -e "\n--- WTYCZKI --- pierwszy raport"     >> "$ALERT_FILE"
         cat "${DATA_DIR}/${tmp_file}" | column -t -s',' >> "$ALERT_FILE"
-    else 
+    else
         cmp -s "${DATA_DIR}/${tmp_file}" "${DATA_DIR}/${file}"
         if [ $? -ne 0 ]
         then
@@ -276,10 +276,10 @@ function simple_scan()
     local scan_file="scan.log"
     rm -f "${DATA_DIR}/${scan_file}"
 
-    grep -RlF '\x47\x4c\x4fB\x41\x4c\x53' "$WEBSITE_HOME_DIR" --exclude-dir="${DATA_DIR}" >> "${DATA_DIR}/${scan_file}" 2> /dev/null
-    grep -RlF '\x47L\x4f\x42' "$WEBSITE_HOME_DIR" --exclude-dir="${DATA_DIR}" >> "${DATA_DIR}/${scan_file}" 2> /dev/null
-    grep -RlF '@include '\' "$WEBSITE_HOME_DIR" --exclude-dir="${DATA_DIR}" >> "${DATA_DIR}/${scan_file}" 2> /dev/null
-    grep -RlF '@eval($_POST[' "$WEBSITE_HOME_DIR" --exclude-dir="${DATA_DIR}" >> "${DATA_DIR}/${scan_file}" 2> /dev/null
+    grep -RlF '\x47\x4c\x4fB\x41\x4c\x53' "$WEBSITE_HOME_DIR" | grep -vF "${DATA_DIR}" >> "${DATA_DIR}/${scan_file}" 2> /dev/null
+    grep -RlF '\x47L\x4f\x42' "$WEBSITE_HOME_DIR" | grep -vF "${DATA_DIR}" >> "${DATA_DIR}/${scan_file}" 2> /dev/null
+    grep -RlF '@include '\' "$WEBSITE_HOME_DIR" | grep -vF "${DATA_DIR}" >> "${DATA_DIR}/${scan_file}" 2> /dev/null
+    grep -RlF '@eval($_POST[' "$WEBSITE_HOME_DIR" | grep -vF "${DATA_DIR}" >> "${DATA_DIR}/${scan_file}" 2> /dev/null
 
     if [ `cat "${DATA_DIR}/${scan_file}" | wc -l` -gt 0 ]
     then
@@ -385,3 +385,6 @@ then
     echo "Czas wykonywania skryptu: $SECONDS sekund" >> "${ALERT_FILE}"
     cat "${ALERT_FILE}" | /usr/bin/mail -s "Raport wp-guardian" "$ALERT_EMAIL"
 fi
+
+rm -f "${ALERT_FILE}"
+
