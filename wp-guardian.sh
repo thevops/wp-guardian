@@ -31,6 +31,7 @@ SHA256SUM_BIN="/usr/bin/sha256sum"
 AWK_BIN="/usr/bin/awk"
 
 ALERT_FILE="${DATA_DIR}/alert.log"
+true >"$ALERT_FILE"
 
 ERROR_FILE="${DATA_DIR}/error.log"
 
@@ -385,6 +386,3 @@ then
     echo "Czas wykonywania skryptu: $SECONDS sekund" >> "${ALERT_FILE}"
     cat "${ALERT_FILE}" | /usr/bin/mail -s "Raport wp-guardian" "$ALERT_EMAIL"
 fi
-
-rm -f "${ALERT_FILE}"
-
