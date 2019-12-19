@@ -13,7 +13,7 @@ Używa wp-cli: https://wp-cli.org/
 
 ### Konfiguracja
  Stworz katalog .wp-guardian/ w katalogu strony
- 
+ Sklonuj do niego to repozytorium
  Wypełnij dane w pliku
 - adres email, na który wysyłane będą raporty
 - ścieżka do katalogu ze stroną
