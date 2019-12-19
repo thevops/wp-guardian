@@ -320,8 +320,8 @@ function check_all_files()
             echo -e "\n--- Zmienione pliki ---- $num_lines" >> "$ALERT_FILE"
             cat "${DATA_DIR}/${checksum_changes}" | "$AWK_BIN" '{print $2}' >> "$ALERT_FILE"
         fi
+        mv -f "${DATA_DIR}/${checksum_file_new}" "${DATA_DIR}/${checksum_file}"
     fi
-    mv -f "${DATA_DIR}/${checksum_file_new}" "${DATA_DIR}/${checksum_file}"
 }
 
 # ------------------------------
