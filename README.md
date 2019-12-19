@@ -12,6 +12,7 @@ Skrypt dodany do systemowego crona monitoruje WordPressa
 Używa wp-cli: https://wp-cli.org/
 
 ### Konfiguracja
+
 - Stworz katalog .wp-guardian/ w katalogu strony
 - Sklonuj do niego to repozytorium
 - Wypełnij dane w pliku
