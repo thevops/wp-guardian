@@ -277,10 +277,10 @@ function simple_scan()
     local scan_file="scan.log"
     rm -f "${DATA_DIR}/${scan_file}"
 
-    grep -RlF '\x47\x4c\x4fB\x41\x4c\x53' "$WEBSITE_HOME_DIR" | grep -vF "wp-guardian" >> "${DATA_DIR}/${scan_file}" 2> /dev/null
-    grep -RlF '\x47L\x4f\x42' "$WEBSITE_HOME_DIR" | grep -vF "wp-guardian" >> "${DATA_DIR}/${scan_file}" 2> /dev/null
-    grep -RlF '@include '\' "$WEBSITE_HOME_DIR" | grep -vF "wp-guardian" >> "${DATA_DIR}/${scan_file}" 2> /dev/null
-    grep -RlF '@eval($_POST[' "$WEBSITE_HOME_DIR" | grep -vF "wp-guardian" >> "${DATA_DIR}/${scan_file}" 2> /dev/null
+    grep -RlF '\x47\x4c\x4fB\x41\x4c\x53' "$WEBSITE_HOME_DIR" | grep -vE "wp-guardian|wp-content/wphb-cache" >> "${DATA_DIR}/${scan_file}" 2> /dev/null
+    grep -RlF '\x47L\x4f\x42' "$WEBSITE_HOME_DIR" | grep -vE "wp-guardian|wp-content/wphb-cache" >> "${DATA_DIR}/${scan_file}" 2> /dev/null
+    grep -RlF '@include '\' "$WEBSITE_HOME_DIR" | grep -vE "wp-guardian|wp-content/wphb-cache" >> "${DATA_DIR}/${scan_file}" 2> /dev/null
+    grep -RlF '@eval($_POST[' "$WEBSITE_HOME_DIR" | grep -vE "wp-guardian|wp-content/wphb-cache" >> "${DATA_DIR}/${scan_file}" 2> /dev/null
 
     if [ `cat "${DATA_DIR}/${scan_file}" | wc -l` -gt 0 ]
     then
