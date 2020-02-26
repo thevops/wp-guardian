@@ -277,10 +277,10 @@ function simple_scan()
     local scan_file="scan.log"
     rm -f "${DATA_DIR}/${scan_file}"
 
-    grep -RlF '\x47\x4c\x4fB\x41\x4c\x53' "$WEBSITE_HOME_DIR" | grep -vE "wp-guardian|wp-content/wphb-cache" >> "${DATA_DIR}/${scan_file}" 2> /dev/null
-    grep -RlF '\x47L\x4f\x42' "$WEBSITE_HOME_DIR" | grep -vE "wp-guardian|wp-content/wphb-cache" >> "${DATA_DIR}/${scan_file}" 2> /dev/null
-    grep -RlF '@include '\' "$WEBSITE_HOME_DIR" | grep -vE "wp-guardian|wp-content/wphb-cache" >> "${DATA_DIR}/${scan_file}" 2> /dev/null
-    grep -RlF '@eval($_POST[' "$WEBSITE_HOME_DIR" | grep -vE "wp-guardian|wp-content/wphb-cache" >> "${DATA_DIR}/${scan_file}" 2> /dev/null
+    grep -RlF '\x47\x4c\x4fB\x41\x4c\x53' "$WEBSITE_HOME_DIR" | grep -vE "wp-guardian|wphb-cache" >> "${DATA_DIR}/${scan_file}" 2> /dev/null
+    grep -RlF '\x47L\x4f\x42' "$WEBSITE_HOME_DIR" | grep -vE "wp-guardian|wphb-cache" >> "${DATA_DIR}/${scan_file}" 2> /dev/null
+    grep -RlF '@include '\' "$WEBSITE_HOME_DIR" | grep -vE "wp-guardian|wphb-cache" >> "${DATA_DIR}/${scan_file}" 2> /dev/null
+    grep -RlF '@eval($_POST[' "$WEBSITE_HOME_DIR" | grep -vE "wp-guardian|wphb-cache" >> "${DATA_DIR}/${scan_file}" 2> /dev/null
 
     if [ `cat "${DATA_DIR}/${scan_file}" | wc -l` -gt 0 ]
     then
@@ -298,7 +298,7 @@ function check_all_files()
     local checksum_file_new="sum_new.log"
     local checksum_file_tmp="sum_tmp.log"
 
-    find "$WEBSITE_HOME_DIR" \( -name "*.php" -o -name "*.html" -o -name "*.js" -o -name ".htaccess" \) -printf '%P\n' 2> /dev/null | while IFS= read line
+    find "$WEBSITE_HOME_DIR" \( -name "*.php" -o -name "*.html" -o -name "*.js" -o -name ".htaccess" \) -printf '%P\n' 2> /dev/null | grep -v "cache" | while IFS= read line
     do
         "$SHA256SUM_BIN" "${WEBSITE_HOME_DIR}/${line}" >> "${DATA_DIR}/${checksum_file_tmp}"
     done
@@ -320,8 +320,8 @@ function check_all_files()
             echo -e "\n--- Zmienione pliki ---- $num_lines" >> "$ALERT_FILE"
             cat "${DATA_DIR}/${checksum_changes}" | "$AWK_BIN" '{print $2}' >> "$ALERT_FILE"
         fi
-        mv -f "${DATA_DIR}/${checksum_file_new}" "${DATA_DIR}/${checksum_file}"
     fi
+    mv -f "${DATA_DIR}/${checksum_file_new}" "${DATA_DIR}/${checksum_file}"
 }
 
 # ------------------------------
@@ -386,3 +386,6 @@ then
     echo "Czas wykonywania skryptu: $SECONDS sekund" >> "${ALERT_FILE}"
     cat "${ALERT_FILE}" | /usr/bin/mail -s "Raport wp-guardian" "$ALERT_EMAIL"
 fi
+
+#rm -f "${ALERT_FILE}"
+
